@@ -1,0 +1,16 @@
+{
+    "name": "CHTrips",
+    "alias": "chtrips",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\CHTrips\\Providers\\AppServiceProvider",
+        "Modules\\CHTrips\\Providers\\EventServiceProvider",
+        "Modules\\CHTrips\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
