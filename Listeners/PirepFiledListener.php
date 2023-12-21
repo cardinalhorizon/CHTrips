@@ -3,20 +3,20 @@
 namespace Modules\CHTrips\Listeners;
 
 use App\Contracts\Listener;
-use App\Events\PirepPrefiled;
+use App\Events\PirepFiled;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Modules\CHTrips\Models\Enums\TripState;
 use Modules\CHTrips\Models\FlightPirepTrip;
 use Modules\CHTrips\Models\TripReport;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Class PirepPrefiledListener
+ * Class PirepFiledListener
  * @package Modules\CHTrips\Listeners
  */
-class PirepPrefiledListener extends Listener
+class PirepFiledListener extends Listener
 {
     /**
      * Create the event listener.
@@ -34,9 +34,8 @@ class PirepPrefiledListener extends Listener
      * @param  object  $event
      * @return void
      */
-    public function handle(PirepPrefiled $event)
+    public function handle(PirepFiled $event)
     {
-        // Check if the PIREP is associated with a Trip
         $user = $event->pirep->user_id;
         $flight = $event->pirep->flight_id;
         $pirep_id = $event->pirep->id;
@@ -48,12 +47,10 @@ class PirepPrefiledListener extends Listener
             if ($active_trip === null) {
                 return;
             }
-            $active_trip->state = TripState::IN_PROGRESS;
             FlightPirepTrip::where(['trip_report_id' => $active_trip->id, 'flight_id' => $flight])->update(['pirep_id' => $pirep_id]);
             Log::info("Trip {$active_trip['id']} paired with PIREP {$pirep_id}");
         } catch (\Exception $exception) {
             Log::error($exception);
         }
-
     }
 }

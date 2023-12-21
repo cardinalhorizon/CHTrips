@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class TripReport
  * @package Modules\CHTrips\Models
+ * @property int state
+ * @property string id
+ * @property string name
  */
 class TripReport extends Model
 {

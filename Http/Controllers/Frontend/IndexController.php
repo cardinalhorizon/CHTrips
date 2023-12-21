@@ -84,13 +84,13 @@ class IndexController extends Controller
         $data['visible'] = false;
 
         $airports = explode(',', str_replace(' ', '', strtoupper($data['airports'])));
+        unset($data['airports']);
         // First, create the trip.
         $tr = new TripReport();
         $tr->owner_id = $user->id;
 
         $tr->name = "Free Flight: {$airports[0]}->{$airports[count($airports) - 1]}";
         $tr->save();
-
 
         // Now, create each flight based on the params
         for ($i = 0; $i < count($airports) - 1; $i++) {
@@ -100,6 +100,9 @@ class IndexController extends Controller
             //dd($data);
             //dd($tr);
             $flight = $this->flightService->createFlight($data);
+
+            $flight->owner()->associate($tr);
+            $flight->save();
 
             // TODO: Refactor this later when we find out WHY this is not behaving
             FlightPirepTrip::create([
