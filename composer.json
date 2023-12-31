@@ -2,12 +2,6 @@
     "name": "VENDOR/chtrips-module",
     "type": "phpvms-module",
     "description": "",
-    "authors": [
-        {
-            "name": "",
-            "email": ""
-        }
-    ],
     "require": {
         "composer/installers": "~1.0"
     },
