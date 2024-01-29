@@ -83,7 +83,7 @@ class IndexController extends Controller
         $data['active'] = true;
         $data['visible'] = false;
 
-        $airports = explode(',', str_replace(' ', '', strtoupper($data['airports'])));
+        $airports = $data['airports'];
         unset($data['airports']);
         // First, create the trip.
         $tr = new TripReport();
