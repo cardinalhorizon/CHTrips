@@ -77,19 +77,27 @@ class IndexController extends Controller
         // Get the request
         $data = $request->all();
         $data['flight_number'] = random_int(9001, 9999);
-        $data['flight_type'] = FlightType::CHARTER_PAX_ONLY;
         $data['minutes'] = 0;
         $data['hours'] = 0;
         $data['active'] = true;
         $data['visible'] = false;
-
+        //dd($data);
         $airports = $data['airports'];
+        $flight_type = $data['flight_type'];
+        unset($data['flight_type']);
         unset($data['airports']);
         // First, create the trip.
         $tr = new TripReport();
         $tr->owner_id = $user->id;
 
-        $tr->name = "Free Flight: {$airports[0]}->{$airports[count($airports) - 1]}";
+        if ($data['name'] == "")
+            $tr->name = "Free Flight: {$airports[0]}->{$airports[count($airports) - 1]}";
+        else
+            $tr->name = $data['name'];
+
+        if ($data['description'] != "")
+            $tr->description = $data['description'];
+
         $tr->save();
 
         // Now, create each flight based on the params
@@ -97,6 +105,7 @@ class IndexController extends Controller
             $data['dpt_airport_id'] = $airports[$i];
             $data['arr_airport_id'] = $airports[$i + 1];
             $data['route_leg'] = $i + 1;
+            $data['flight_type'] = $flight_type[$i];
             //dd($data);
             //dd($tr);
             $flight = $this->flightService->createFlight($data);
@@ -144,6 +153,7 @@ class IndexController extends Controller
         $progress = round(count($completed)/count($fpts)*100);
         return view('chtrips::show', [
             'name' => $trip_report->name,
+            'description' => $trip_report->description,
             'flight' => array_shift($upcoming),
             'progress' => $progress,
             'upcoming' => $upcoming,

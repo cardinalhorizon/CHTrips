@@ -56,6 +56,14 @@
             ]) }}
 
           </div>
+          <div class="form-group mt-3">
+            <label>Trip Name</label>
+            <input type="text" class="form-control" name="name"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea type="textarea" class="form-control" name="description"></textarea>
+          </div>
         </div>
       </div>
       @endability
@@ -76,7 +84,7 @@
 <div class="row">
 <div class="col">
 <div>Flight Type</div>
-<select class="form-control select2" style="width: 100%" name="flight_type"><option value="C">Passenger (Charter)</option><option value="A">Cargo (Additional)</option><option value="E">VIP Flight</option><option value="G">Passenger (Additional)</option><option value="H">Cargo (Charter)</option><option value="I">Ambulance</option><option value="K">Training</option><option value="M">Mail Service</option><option value="O">Passenger (Special Charter)</option><option value="P">Positioning</option><option value="T">Technical Test</option><option value="W">Military</option><option value="X">Technical Stop</option></select>
+<select class="form-control select2" style="width: 100%" name="flight_type[]"><option value="C">Passenger (Charter)</option><option value="A">Cargo (Additional)</option><option value="E">VIP Flight</option><option value="G">Passenger (Additional)</option><option value="H">Cargo (Charter)</option><option value="I">Ambulance</option><option value="K">Training</option><option value="M">Mail Service</option><option value="O">Passenger (Special Charter)</option><option value="P">Positioning</option><option value="T">Technical Test</option><option value="W">Military</option><option value="X">Technical Stop</option></select>
 </div>
 <div class="col">
 <div>Destination</div>

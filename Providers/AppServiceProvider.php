@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerLinks();
 
         // Uncomment this if you have migrations
-        // $this->loadMigrationsFrom(__DIR__ . '/../$MIGRATIONS_PATH$');
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
     }
 
     /**
