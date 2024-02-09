@@ -45,7 +45,7 @@ class IndexController extends Controller
                 $trip->progress = 0;
                 continue;
             }
-            $prog = round($completed/count($trip->fpts)*100);
+            $prog = round($completed / count($trip->fpts) * 100);
 
             $trip->progress = "{$completed}/{$trip->fpts->count()} ({$prog})";
         }
@@ -90,13 +90,15 @@ class IndexController extends Controller
         $tr = new TripReport();
         $tr->owner_id = $user->id;
 
-        if ($data['name'] == "")
+        if (isset($data['name'])) {
             $tr->name = "Free Flight: {$airports[0]}->{$airports[count($airports) - 1]}";
-        else
+        } else {
             $tr->name = $data['name'];
+        }
 
-        if ($data['description'] != "")
+        if (isset($data['description'])) {
             $tr->description = $data['description'];
+        }
 
         $tr->save();
 
@@ -138,8 +140,9 @@ class IndexController extends Controller
         $trip_report = TripReport::find($trip);
         $upcoming = [];
         $completed = [];
-        if ($trip_report === null)
+        if ($trip_report === null) {
             abort(404, "Trip Report Not Found");
+        }
         $fpts = $trip_report->fpts()->orderBy('order')->get();
         foreach ($fpts as $fpt) {
             if ($fpt->pirep_id === null) {
@@ -150,16 +153,16 @@ class IndexController extends Controller
             }
         }
         //dd([$upcoming, $completed, $fpts]);
-        $progress = round(count($completed)/count($fpts)*100);
+        $progress = round(count($completed) / count($fpts) * 100);
         return view('chtrips::show', [
-            'name' => $trip_report->name,
-            'description' => $trip_report->description,
-            'flight' => array_shift($upcoming),
-            'progress' => $progress,
-            'upcoming' => $upcoming,
-            'pireps' => $completed,
-            'user' => Auth::user(),
-            'legs' => $fpts->count(),
+            'name'          => $trip_report->name,
+            'description'   => $trip_report->description,
+            'flight'        => array_shift($upcoming),
+            'progress'      => $progress,
+            'upcoming'      => $upcoming,
+            'pireps'        => $completed,
+            'user'          => Auth::user(),
+            'legs'          => $fpts->count(),
             'simbrief'      => !empty(setting('simbrief.api_key')),
             'simbrief_bids' => setting('simbrief.only_bids'),
             'acars_plugin'  => $this->moduleSvc->isModuleActive('VMSAcars'),
