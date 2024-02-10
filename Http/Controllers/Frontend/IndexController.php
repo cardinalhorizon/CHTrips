@@ -90,13 +90,13 @@ class IndexController extends Controller
         $tr = new TripReport();
         $tr->owner_id = $user->id;
 
-        if (!isset($data['name'])) {
+        if ($data['name'] == "") {
             $tr->name = "Free Flight: {$airports[0]}->{$airports[count($airports) - 1]}";
         } else {
             $tr->name = $data['name'];
         }
 
-        if (!isset($data['description'])) {
+        if ($data['description'] != "") {
             $tr->description = $data['description'];
         }
 
