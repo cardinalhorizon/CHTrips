@@ -8,6 +8,7 @@ use App\Models\Pirep;
 use App\Models\Traits\HashIdTrait;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class TripReport
@@ -28,10 +29,9 @@ class TripReport extends Model
     {
         return $this->morphTo();
     }
-
-    public function user(): BelongsTo
+    public function users(): BelongsToMany
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'trip_report_user')->withPivot('owner');
     }
     public function fpts() {
         return $this->hasMany(FlightPirepTrip::class);

@@ -5,6 +5,9 @@ namespace Modules\CHTrips\Providers;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Modules\CHTrips\Http\Controllers\Admin\TripsAdminController;
+use Modules\CHTrips\Http\Controllers\Admin\TripTemplatesAdminController;
+use Modules\CHTrips\Http\Controllers\Frontend\IndexController;
 
 /**
  * Register the routes required for your module here
@@ -42,7 +45,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->registerWebRoutes();
         $this->registerAdminRoutes();
-        $this->registerApiRoutes();
     }
 
     /**
@@ -52,44 +54,49 @@ class RouteServiceProvider extends ServiceProvider
     {
         $config = [
             'as'         => 'chtrips.',
-            'prefix'     => 'trips',
             'namespace'  => $this->namespace.'\Frontend',
             'middleware' => ['web'],
         ];
 
-        Route::group($config, function() {
-            $this->loadRoutesFrom(__DIR__.'/../Http/Routes/web.php');
+        Route::group($config, function () {
+            Route::group(['middleware' => 'auth', 'prefix' => 'trips'], function () {
+                Route::get('/', 'IndexController@index')->name('index');
+                Route::get('/create', 'IndexController@create')->name('create');
+                Route::post('/', 'IndexController@store')->name('store');
+                Route::get('/{trip}', [IndexController::class, 'show'])->name('show');
+            });
         });
     }
 
     protected function registerAdminRoutes(): void
     {
         $config = [
-            'as'         => 'admin.chtrips.',
-            'prefix'     => 'admin/chtrips',
+            'as'         => 'admin.',
+            'prefix'     => 'admin/',
             'namespace'  => $this->namespace.'\Admin',
             'middleware' => ['web', 'role:admin'],
         ];
 
-        Route::group($config, function() {
-            $this->loadRoutesFrom(__DIR__.'/../Http/Routes/admin.php');
-        });
-    }
+        Route::group($config, function () {
+            Route::group(['as' => 'trips.', 'prefix' => 'trips/'], function () {
+                Route::get('/', [TripsAdminController::class, 'index']);
+                Route::get('create', [TripsAdminController::class, 'create']);
+                Route::post('/', [TripsAdminController::class, 'store']);
+                Route::group(['prefix' => '/templates', 'as' => 'templates.'], function () {
+                    Route::get('/', [TripTemplatesAdminController::class, 'index']);
+                    Route::post('/', [TripTemplatesAdminController::class, 'store']);
+                    Route::get('/create', [TripTemplatesAdminController::class, 'create']);
+                    Route::get('/{id}', [TripTemplatesAdminController::class, 'show']);
+                    Route::get('/{id}/edit', [TripTemplatesAdminController::class, 'edit']);
+                    Route::patch('/{id}', [TripTemplatesAdminController::class, 'update']);
+                    Route::delete('/{id}', [TripTemplatesAdminController::class, 'destroy']);
+                });
+                Route::get('/{id}', [TripsAdminController::class, 'show']);
+                Route::get('/{id}/edit', [TripsAdminController::class, 'edit']);
+            });
+            Route::group(['as' => 'missions.', 'prefix' => 'missions/'], function () {
 
-    /**
-     * Register any API routes your module has. Remove this if you aren't using any
-     */
-    protected function registerApiRoutes(): void
-    {
-        $config = [
-            'as'         => 'api.chtrips.',
-            'prefix'     => 'api/chtrips',
-            'namespace'  => $this->namespace.'\Api',
-            'middleware' => ['api'],
-        ];
-
-        Route::group($config, function() {
-            $this->loadRoutesFrom(__DIR__.'/../Http/Routes/api.php');
+            });
         });
     }
 }

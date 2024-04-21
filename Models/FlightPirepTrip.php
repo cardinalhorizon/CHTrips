@@ -4,6 +4,7 @@ namespace Modules\CHTrips\Models;
 
 use App\Contracts\Model;
 use App\Models\Flight;
+use App\Models\Pirep;
 
 /**
  * Class FlightPirepTrip
@@ -22,5 +23,11 @@ class FlightPirepTrip extends Model
     public $timestamps = false;
     public function flight() {
         return $this->belongsTo(Flight::class);
+    }
+    public function trip_report() {
+        return $this->belongsTo(TripReport::class);
+    }
+    public function pirep() {
+        return $this->belongsTo(Pirep::class);
     }
 }

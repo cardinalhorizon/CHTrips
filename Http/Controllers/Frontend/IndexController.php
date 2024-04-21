@@ -38,16 +38,22 @@ class IndexController extends Controller
      */
     public function index(Request $request)
     {
-        $trips = TripReport::where('owner_id', Auth::user()->id)->with('fpts')->get();
+        $trips = TripReport::whereHas('users', function ($q) {
+            $q->where('user_id', Auth::user()->id);
+        })->get();
         foreach($trips as $trip) {
-            $completed = $trip->fpts->where('completed', true)->count();
-            if (count($trip->fpts) == 0) {
-                $trip->progress = 0;
-                continue;
+            $completed = 0;
+            $fpts = $trip->fpts()->orderBy('order')->get();
+            foreach ($fpts as $fpt) {
+                if ($fpt->pirep_id === null) {
+                    //dd(Flight::find($fpt->flight_id));
+                } else {
+                    $completed++;
+                }
             }
-            $prog = round($completed / count($trip->fpts) * 100);
+            $prog = round($completed / count($fpts) * 100);
 
-            $trip->progress = "{$completed}/{$trip->fpts->count()} ({$prog})";
+            $trip->progress = "{$completed}/{$trip->fpts->count()} ({$prog}%)";
         }
         return view('chtrips::index', ['trips' => $trips]);
     }
@@ -88,7 +94,7 @@ class IndexController extends Controller
         unset($data['airports']);
         // First, create the trip.
         $tr = new TripReport();
-        $tr->owner_id = $user->id;
+
 
         if ($data['name'] == "") {
             $tr->name = "Free Flight: {$airports[0]}->{$airports[count($airports) - 1]}";
@@ -102,6 +108,7 @@ class IndexController extends Controller
 
         $tr->save();
 
+        $tr->users()->attach($user->id);
         // Now, create each flight based on the params
         for ($i = 0; $i < count($airports) - 1; $i++) {
             $data['dpt_airport_id'] = $airports[$i];

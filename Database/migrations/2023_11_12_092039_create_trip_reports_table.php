@@ -20,9 +20,8 @@ class CreateTripReportsTable extends Migration
             $table->string('id');
             $table->foreignId('parent_id')->nullable();
             $table->string('parent_type')->nullable();
-            $table->integer('trip_type');
+            $table->longText('description')->nullable();
             $table->string('name');
-            $table->foreignId('owner_id');
             $table->integer('state');
             $table->foreignId('aircraft_id')->nullable();
             $table->timestamps();
@@ -33,6 +32,11 @@ class CreateTripReportsTable extends Migration
             $table->string('flight_id');
             $table->string('pirep_id')->nullable();
             $table->integer('order');
+        });
+        Schema::create('trip_report_user', function (Blueprint $table) {
+            $table->string('trip_report_id');
+            $table->foreignId('user_id');
+            $table->boolean('owner');
         });
     }
 

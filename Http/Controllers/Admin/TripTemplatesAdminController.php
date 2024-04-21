@@ -4,11 +4,12 @@ namespace Modules\CHTrips\Http\Controllers\Admin;
 
 use App\Contracts\Controller;
 use Illuminate\Http\Request;
+use Modules\CHTrips\Models\TripTemplate;
 
 /**
  * Admin controller
  */
-class AdminController extends Controller
+class TripTemplatesAdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -50,7 +51,7 @@ class AdminController extends Controller
      *
      * @return mixed
      */
-    public function edit(Request $request)
+    public function edit(Request $request, TripTemplate $id)
     {
         return view('chtrips::admin.edit');
     }
@@ -62,7 +63,7 @@ class AdminController extends Controller
      *
      * @return mixed
      */
-    public function show(Request $request)
+    public function show(Request $request, TripTemplate $id)
     {
         return view('chtrips::admin.show');
     }
@@ -72,7 +73,7 @@ class AdminController extends Controller
      *
      * @param Request $request
      */
-    public function update(Request $request)
+    public function update(Request $request, TripTemplate $id)
     {
     }
 
@@ -81,7 +82,8 @@ class AdminController extends Controller
      *
      * @param Request $request
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, TripTemplate $id)
     {
+        $id->delete();
     }
 }

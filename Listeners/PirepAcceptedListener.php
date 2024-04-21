@@ -44,18 +44,27 @@ class PirepAcceptedListener extends Listener
         $flight = $event->pirep->flight_id;
         $pirep_id = $event->pirep->id;
 
-        $active_trip = TripReport::where(['owner_id' => $user])->whereIn('state', [TripState::UPCOMING, TripState::IN_PROGRESS])->whereHas('flights', function (Builder $query) use ($flight) {
-            $query->where('flight_id', $flight);
-        })->with('fpts')->first();
+        //$active_trip = TripReport::whereHas('users', function ($q) use ($user) { $q->where('user_id', $user);})->whereIn('state', [TripState::UPCOMING, TripState::IN_PROGRESS])->whereHas('flights', function (Builder $query) use ($flight) {
+        //    $query->where('flight_id', $flight);
+        //})->with('fpts')->first();
+        //dd($active_trip);
+        //if ($active_trip === null) {
+        //    return;
+        //}
+
+        //FlightPirepTrip::where(['trip_report_id' => $active_trip->id, 'flight_id' => $flight])->update(['completed' => true]);
+
+        // Check for Trip Completion
+
+        $active_trip = FlightPirepTrip::with('trip_report')->where('pirep_id', $pirep_id)->first()->trip_report()->first();
         if ($active_trip === null) {
             return;
         }
-        FlightPirepTrip::where(['trip_report_id' => $active_trip->id, 'flight_id' => $flight])->update(['completed' => true]);
-
-        // Check for Trip Completion
+        $active_trip->load('fpts');
+        //dd($active_trip);
         $completed = true;
         foreach ($active_trip->fpts as $fpt) {
-            if ($fpt->completed) {
+            if ($fpt->pirep->state = PirepState::ACCEPTED) {
                 continue;
             }
             $completed = false;

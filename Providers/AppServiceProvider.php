@@ -47,7 +47,8 @@ class AppServiceProvider extends ServiceProvider
         $this->moduleSvc->addFrontendLink('Trips', '/trips', '', $logged_in=true);
 
         // Admin links:
-        $this->moduleSvc->addAdminLink('CHTrips', '/admin/chtrips');
+        $this->moduleSvc->addAdminLink('Trips', '/admin/trips');
+        $this->moduleSvc->addAdminLink('Missions', '/admin/missions');
     }
 
     /**

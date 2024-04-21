@@ -42,7 +42,7 @@ class PirepPrefiledListener extends Listener
         $pirep_id = $event->pirep->id;
 
         try {
-            $active_trip = TripReport::where(['owner_id' => $user])->whereIn('state', [TripState::UPCOMING, TripState::IN_PROGRESS])->whereHas('flights', function (Builder $query) use ($flight) {
+            $active_trip = TripReport::whereHas('users', function ($q) use ($user) { $q->where('user_id', $user);})->whereIn('state', [TripState::UPCOMING, TripState::IN_PROGRESS])->whereHas('flights', function (Builder $query) use ($flight) {
                 $query->where('flight_id', $flight);
             })->first();
             if ($active_trip === null) {
