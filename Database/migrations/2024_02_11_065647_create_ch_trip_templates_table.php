@@ -17,6 +17,7 @@ class CreateChTripTemplatesTable extends Migration
     public function up()
     {
         // Add Trip Templates
+        if (!Schema::hasTable('ch_trip_templates')) {
         Schema::create('ch_trip_templates', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -30,9 +31,12 @@ class CreateChTripTemplatesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        }
+        if (Schema::hasTable('ch_trip_templates') &&  !Schema::hasColumn('ch_trip_templates', 'can_duplicate')) {
         Schema::table('ch_trip_reports', function (Blueprint $table) {
             $table->boolean('can_duplicate'); // Allows trip to be duplicated by another user so they can fly a similar trip.
         });
+        }
     }
 
     /**
