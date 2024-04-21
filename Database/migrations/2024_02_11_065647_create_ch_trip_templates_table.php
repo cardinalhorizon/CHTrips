@@ -16,17 +16,6 @@ class CreateChTripTemplatesTable extends Migration
      */
     public function up()
     {
-        // Allow Multiple Users to be assigned to a trip.
-        Schema::create('trip_report_user', function (Blueprint $table) {
-            $table->string('trip_report_id');
-            $table->foreignId('user_id');
-            $table->boolean('owner');
-        });
-        // Convert Users from old trip ownership to new one.
-        //$tr = \Modules\CHTrips\Models\TripReport::all();
-        //$user_id = $tr->owner_id;
-        //$tr->users()->attach($user_id, ['owner' => true]);
-
         // Add Trip Templates
         Schema::create('ch_trip_templates', function (Blueprint $table) {
             $table->increments('id');
