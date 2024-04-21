@@ -38,14 +38,6 @@
       <div class="card">
         <div class="card-header">Additional Settings</div>
         <div class="card-body">
-          @ability('admin', 'admin-access')
-          <div>Assign To User</div>
-          <select class="form-control select2 my-auto" name="user_id">
-            @foreach(\App\Models\User::all() as $user)
-              <option value="{{$user->id}}" @if($user->id == Auth::user()->id) selected @endif>{{$user->ident}} | {{$user->name}}</option>
-            @endforeach
-          </select>
-          @endability
           <div class="input-group input-group-sm mt-3">
             {{ Form::text('flight_number', null, [
                 'placeholder' => "Flight Number (optional)",
