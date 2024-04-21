@@ -32,8 +32,6 @@ class CreateChTripTemplatesTable extends Migration
         });
         Schema::table('ch_trip_reports', function (Blueprint $table) {
             $table->boolean('can_duplicate'); // Allows trip to be duplicated by another user so they can fly a similar trip.
-            //$table->foreignId('owner_id')->nullable()->change(); // Allow trip to be claimed by users.
-            $table->dropColumn('owner_id');
         });
     }
 
