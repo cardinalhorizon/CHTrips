@@ -73,9 +73,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->publishes([$sourcePath => $viewPath],'views');
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
-            return $path . '/modules/chtrips';
-        }, \Config::get('view.paths')), [$sourcePath]), 'chtrips');
+        $this->loadViewsFrom(array_merge(array_filter(array_map(function ($path) {
+            $path = str_replace('default', setting('general.theme'), $path); 
+            // Check if the directory exists before adding it
+            if (file_exists($path.'/modules/chtrips') && is_dir($path.'/modules/chtrips'))
+                return $path.'/modules/chtrips';
+
+            return null;
+        }, \Config::get('view.paths'))), [$sourcePath]), 'chtrips');
     }
 
     /**
