@@ -47,6 +47,7 @@
             phpvms.bids.removeBid(flight_id).then(() => {
               console.log('successfully removed flight');
               btn.removeClass(class_name).addClass(not_saved).text("Add Bid");
+              location.reload();
             }).catch((error) => {
               if (error.response && error.response.data)
                 alert(`Error removing bid: ${error.response.data.details}`)
@@ -64,6 +65,7 @@
           phpvms.bids.addBid(flight_id, ac_id).then(() => {
             console.log('successfully saved flight');
             $('button.save_flight[x-id="' + flight_id + '"]').addClass(class_name).removeClass(not_saved).text("Remove Bid");
+            location.reload();
           }).catch((error) => {
             if (error.response && error.response.data)
               alert(`Error adding bid: ${error.response.data.details}`)
@@ -80,6 +82,7 @@
           phpvms.bids.addBid(flight_id).then(() => {
             console.log('successfully saved flight');
             $('button.save_flight[x-id="' + flight_id + '"]').addClass(class_name).removeClass(not_saved).text("Remove Bid");
+            location.reload();
           }).catch((error) => {
             if (error.response && error.response.data) alert(
               `Error adding bid: ${error.response.data.details}`)
@@ -97,12 +100,13 @@
           const btn = $(this);
           const class_name = btn.attr('x-saved-class'); // classname to use is set on the element
           const flight_id = btn.attr('x-id');
+          const not_saved = btn.attr('x-not-saved-class');
 
           if (!btn.hasClass(class_name)) {
             phpvms.bids.addBid(flight_id).then(() => {
               console.log('successfully saved flight');
-              btn.addClass(class_name)
-              alert('@lang('flights.bidadded')');
+              $('button.save_flight[x-id="' + flight_id + '"]').addClass(class_name).removeClass(not_saved).text("Remove Bid");
+              location.reload();
             }).catch((error) => {
               if (error.response && error.response.data)
                 alert(`Error adding bid: ${error.response.data.details}`)
@@ -111,8 +115,8 @@
           } else {
             phpvms.bids.removeBid(flight_id).then(() => {
               console.log('successfully removed flight');
-              btn.removeClass(class_name);
-              alert('@lang('flights.bidremoved')');
+              btn.removeClass(class_name).addClass(not_saved).text("Add Bid");
+              location.reload();
             }).catch((error) => {
               if (error.response && error.response.data)
                 alert(`Error removing bid: ${error.response.data.details}`)
