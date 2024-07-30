@@ -232,4 +232,4 @@
     @include('flights.bids_aircraft')
   @endif
 @endsection
-@include('flights.scripts')
+@include('chtrips::scripts')

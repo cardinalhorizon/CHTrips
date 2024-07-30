@@ -3,6 +3,7 @@
 namespace Modules\CHTrips\Http\Controllers\Frontend;
 
 use App\Contracts\Controller;
+use App\Models\Bid;
 use App\Models\Enums\FlightType;
 use App\Models\Flight;
 use App\Models\Pirep;
@@ -159,12 +160,23 @@ class IndexController extends Controller
                 $completed[] = Pirep::find($fpt->pirep_id);
             }
         }
+        $saved_flights = [];
+        $bids = Bid::where('user_id', Auth::id())->get();
+        foreach ($bids as $bid) {
+            if (!$bid->flight) {
+                $bid->delete();
+                continue;
+            }
+
+            $saved_flights[$bid->flight_id] = $bid->id;
+        }
         //dd([$upcoming, $completed, $fpts]);
         $progress = round(count($completed) / count($fpts) * 100);
         return view('chtrips::show', [
             'name'          => $trip_report->name,
             'description'   => $trip_report->description,
             'flight'        => array_shift($upcoming),
+            'saved'         => $saved_flights,
             'progress'      => $progress,
             'upcoming'      => $upcoming,
             'pireps'        => $completed,
